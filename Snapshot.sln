@@ -7,7 +7,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{87486F8C-5701-4543-92EF-F3B0FB1816FA}"
 ProjectSection(SolutionItems) = preProject
 	README.md = README.md
+	Contributing.md = Contributing.md
 EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snapshot.Example", "Snapshot.Example\Snapshot.Example.csproj", "{13C0349C-08F5-4ACA-B6E5-4A0920CEEDD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,5 +26,9 @@ Global
 		{EF189BCC-319C-4649-94FC-DAFC5A49A358}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF189BCC-319C-4649-94FC-DAFC5A49A358}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF189BCC-319C-4649-94FC-DAFC5A49A358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13C0349C-08F5-4ACA-B6E5-4A0920CEEDD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C0349C-08F5-4ACA-B6E5-4A0920CEEDD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C0349C-08F5-4ACA-B6E5-4A0920CEEDD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C0349C-08F5-4ACA-B6E5-4A0920CEEDD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

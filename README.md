@@ -5,10 +5,16 @@ Snapshot aims to reduce the complexity of unit tests, and provide test documenta
 It is an implementation of the Jest Snapshot Testing concept that is found in [React Javascript unit testing](https://facebook.github.io/jest/docs/en/snapshot-testing.html).
 
 ## Setup
-TODO
+
+First install the NuGet package `Snapshot`. Currently only a pre-release version exists: `0.1.0-alpha`.
+
+Next use `SnapshotAssert` to generate Snapshot files. See [these tests](Snapshot.Example/ExampleTests.cs) for an example of the expected behaviour.
 
 ## Use Cases
 TODO
 
+## Known Issues
+* Calling `.Snapshot(..)` from a non-Fact/Theory method will use that method name for the naming of the snapshot JSON file. This can cause issues when using that non-Fact/Theory method for multiple tests.
+
 ## Contributing
-TODO
+See [Contributing.md](Contributing.md).
