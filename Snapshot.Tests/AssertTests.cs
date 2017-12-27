@@ -40,7 +40,7 @@ namespace Snapshot.Tests
         }
 
         [Fact]
-        public void Given_snapshot_file_exists_and_json_matches_then_succeed()
+        public void Given_snapshot_file_exists_and_json_matches_then_does_not_throw_true_exception()
         {
             var snapshotee = new TestClass();
             var snapshoteeJson = JsonConvert.SerializeObject(snapshotee);
@@ -56,7 +56,7 @@ namespace Snapshot.Tests
         }
 
         [Fact]
-        public void Given_snapshot_file_exists_and_json_does_not_match_then_fail()
+        public void Given_snapshot_file_exists_and_json_does_not_match_then_throws_true_exception()
         {
             var snapshotee = new TestClass();
 
