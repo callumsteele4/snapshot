@@ -10,7 +10,12 @@ namespace Snapshot
     {
         private readonly IFileService _fileService;
 
-        public SnapshotAssert(IFileService fileService)
+        public SnapshotAssert()
+        {
+            _fileService = new SnapshotFileService(new SnapshotDirectoryService());
+        }
+
+        internal SnapshotAssert(IFileService fileService)
         {
             _fileService = fileService;
         }
