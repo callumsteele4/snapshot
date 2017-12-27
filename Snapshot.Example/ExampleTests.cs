@@ -1,42 +1,49 @@
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Snapshot.Example
 {
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    public class Example
+    {
+        public string Message { get; set; } = "Initial message.";
+
+        public void Update()
+        {
+            Message = "Updated the message.";
+        }
+    }
+    
     public class ExampleTests
     {
         private readonly SnapshotAssert _snapshotAssert;
+        private readonly Example _example;
 
         public ExampleTests()
         {
+            _example = new Example();
             _snapshotAssert = new SnapshotAssert();
         }
         
         // This is an example test, the snapshot JSON can be seen in /__snapshots/ExampleTests/Snapshot_check_snapshot_matches.json
         // JSON is as seen below:
-        // {"String":"String","Int":10}
+        // {"Message":"Initial message."}
         [Fact]
-        public void Snapshot_check_snapshot_matches()
+        public void Check_initial_message()
         {
-            var testClass = new TestClass();
-            
-            _snapshotAssert.Snapshot(testClass);
+            _snapshotAssert.Snapshot(_example);
         }
         
         // This is an example test, the snapshot JSON can be seen in /__snapshots/ExampleTests/Snapshot_throws_for_non_matching_snapshot.json
         // JSON is as seen below:
-        // {"String":"String","Int":10}
+        // {"Message":"Updated the message."}
         [Fact]
-        public void Snapshot_throws_for_non_matching_snapshot()
+        public void Check_message_after_update_called()
         {
-            var testClass = new TestClass {String = "New string"};
-            Assert.Throws<TrueException>(() => _snapshotAssert.Snapshot(testClass));
-        }
+            _example.Update();
 
-        private class TestClass
-        {
-            public string String { get; set; } = "String";
-            public int Int { get; set; } = 10;
+            _snapshotAssert.Snapshot(_example);
         }
     }
 }

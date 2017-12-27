@@ -6,7 +6,7 @@ It is an implementation of the Jest Snapshot Testing concept that is found in [R
 
 ## Setup
 
-First install the NuGet package `Snapshot`. Currently only a pre-release version exists: `0.1.0-alpha`.
+First install the NuGet package `Snapshot`. Currently only a pre-release version exists: `0.2.0-alpha`.
 
 Next use `SnapshotAssert` to generate Snapshot files. See [these tests](Snapshot.Example/ExampleTests.cs) for an example of the expected behaviour.
 
@@ -16,8 +16,7 @@ Next use `SnapshotAssert` to generate Snapshot files. See [these tests](Snapshot
 * Asserting that there are no changes in the response of an API.
 
 ## Known Issues
-* Not possible to update a snapshot programmatically.
-* No test runner output / warnings.
+* No test runner output / warnings alerting you that a snapshot has been updated / created.
 * Calling `.Snapshot(..)` from a non-Fact/Theory method will use that method name for the naming of the snapshot JSON file. This can cause issues when using that non-Fact/Theory method for multiple tests.
 
 ## Contributing
