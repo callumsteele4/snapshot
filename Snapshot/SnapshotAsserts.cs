@@ -1,29 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
-using Xunit;
 using Xunit.Sdk;
 
 namespace Snapshot
 {
-    // TODO: Work out how to make this part of the Assert partial class and testable as such
-    public class SnapshotAssert
+    // Possibility: https://andrewlock.net/creating-a-custom-xunit-theory-test-dataattribute-to-load-data-from-json-files/
+    public class Assert : Xunit.Assert
     {
-        private readonly IFileService _fileService;
-
-        public SnapshotAssert()
-        {
-            _fileService = new SnapshotFileService(new SnapshotDirectoryService());
-        }
-
-        internal SnapshotAssert(IFileService fileService)
-        {
-            _fileService = fileService;
-        }
-
         // TODO: Callername will only work for when directly called by the test method,
         // need to look at how to get name of the method in the stack trace which has the [Fact] attribute.
         // Work out how to access caller name and caller file path using reflection.
-        public void Snapshot<T>(
+        public static void Snapshot<T>(
             T input,
             bool overwriteExistingSnapshot = false,
             [CallerMemberName] string callerName = "",
@@ -31,23 +18,23 @@ namespace Snapshot
         {
             var json = JsonConvert.SerializeObject(input);
 
-            if (_fileService.Exists(callerName, callerFilePath))
+            if (FileService.Exists(callerName, callerFilePath))
             {
-                var snapshotJson = _fileService.ReadAllText(callerName, callerFilePath);
+                var snapshotJson = FileService.ReadAllText(callerName, callerFilePath);
 
                 try
                 {
-                    Assert.Equal(snapshotJson, json);
+                    Equal(snapshotJson, json);
                 }
                 catch (EqualException exception)
                 {
                     if (overwriteExistingSnapshot)
                     {
-                        _fileService.WriteAllText(callerName, callerFilePath, json);
+                        FileService.WriteAllText(callerName, callerFilePath, json);
                     }
                     else
                     {
-                        var filePath = _fileService.BuildFilePath(callerName, callerFilePath);
+                        var filePath = FileService.BuildFilePath(callerName, callerFilePath);
                         throw new SnapshotException(exception,
                             $"For this test to pass, the json in '{filePath}' needs to be updated.\n" +
                             "\n" +
@@ -59,7 +46,7 @@ namespace Snapshot
             }
             else
             {
-                _fileService.WriteAllText(callerName, callerFilePath, json);
+                FileService.WriteAllText(callerName, callerFilePath, json);
                 // TODO: Alert test runner with a warning that a new snapshot json file has been created
             }
         }

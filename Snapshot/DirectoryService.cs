@@ -2,10 +2,10 @@
 
 namespace Snapshot
 {
-    public class SnapshotDirectoryService : IDirectoryService
+    public static class DirectoryService
     {
         // TODO: Cover this in tests
-        public string BuildDirectoryPath(string callerFilePath)
+        public static string BuildDirectoryPath(string callerFilePath)
         {
             return callerFilePath.Substring(0, callerFilePath.LastIndexOf(Path.DirectorySeparatorChar))
                    + Path.DirectorySeparatorChar
@@ -16,12 +16,12 @@ namespace Snapshot
                        callerFilePath.LastIndexOf('.') - (callerFilePath.LastIndexOf(Path.DirectorySeparatorChar) + 1));
         }
 
-        public bool Exists(string directoryPath)
+        public static bool Exists(string directoryPath)
         {
             return Directory.Exists(directoryPath);
         }
 
-        public void CreateDirectory(string directoryPath)
+        public static void CreateDirectory(string directoryPath)
         {
             Directory.CreateDirectory(directoryPath);
         }

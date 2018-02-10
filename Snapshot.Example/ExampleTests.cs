@@ -17,13 +17,11 @@ namespace Snapshot.Example
     
     public class ExampleTests
     {
-        private readonly SnapshotAssert _snapshotAssert;
         private readonly Example _example;
 
         public ExampleTests()
         {
             _example = new Example();
-            _snapshotAssert = new SnapshotAssert();
         }
         
         // This is an example test, the snapshot JSON can be seen in /__snapshots/ExampleTests/Snapshot_check_snapshot_matches.json
@@ -32,7 +30,7 @@ namespace Snapshot.Example
         [Fact]
         public void Check_initial_message()
         {
-            _snapshotAssert.Snapshot(_example);
+            Assert.Snapshot(_example);
         }
         
         // This is an example test, the snapshot JSON can be seen in /__snapshots/ExampleTests/Snapshot_throws_for_non_matching_snapshot.json
@@ -43,7 +41,7 @@ namespace Snapshot.Example
         {
             _example.Update();
 
-            _snapshotAssert.Snapshot(_example);
+            Assert.Snapshot(_example);
         }
     }
 }
