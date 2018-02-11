@@ -16,7 +16,6 @@ Next use `SnapshotAssert` to generate Snapshot files. See [these tests](Snapshot
 * Asserting that there are no changes in the response of an API.
 
 ## Known Issues
-* No test runner output / warnings alerting you that a snapshot has been updated / created.
 * Calling `.Snapshot(..)` from a non-Fact/Theory method will use that method name for the naming of the snapshot JSON file. This can cause issues when using that non-Fact/Theory method for multiple tests.
 
 ## Contributing

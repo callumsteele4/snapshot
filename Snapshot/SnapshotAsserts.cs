@@ -46,8 +46,12 @@ namespace Snapshot
             }
             else
             {
+                var filePath = FileService.BuildFilePath(callerName, callerFilePath);
                 FileService.WriteAllText(callerName, callerFilePath, json);
-                // TODO: Alert test runner with a warning that a new snapshot json file has been created
+                throw new SnapshotException(
+                    $"A new json file has been written for this snapshot in '{filePath}'.\n" +
+                    $"\n" +
+                    $"The test has failed so that you are alerted to this fact, and will pass if run again.");
             }
         }
     }

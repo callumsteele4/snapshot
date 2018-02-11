@@ -11,5 +11,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="__snapshots__" />
+    <Folder Include="__snapshots__\ExampleTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Snapshot\Snapshot.csproj" />
   </ItemGroup>
 </Project>
