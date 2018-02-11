@@ -1,37 +1,47 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using Xunit;
 
 namespace Snapshot
 {
     public static class FileService
     {
-        // TODO: Test that directory is created when needed here.
-        public static void WriteAllText(string callerName, string callerFilePath, string json)
+        // TODO: This probably doesn't belong here.
+        public static (string name, string filePath) GetTestMethodNameAndFilePath()
         {
-            var directoryPath = DirectoryService.BuildDirectoryPath(callerFilePath);
+            var testFrame = new StackTrace(true).GetFrames()
+               .Single(frame => frame.GetMethod().GetCustomAttributes<FactAttribute>(true).Any());
+            return (testFrame.GetMethod().Name, testFrame.GetFileName());
+        }
+
+        public static void WriteAllText(string name, string filePath, string json)
+        {
+            var directoryPath = DirectoryService.BuildDirectoryPath(filePath);
             if (!DirectoryService.Exists(directoryPath))
             {
                 DirectoryService.CreateDirectory(directoryPath);
             }
             
-            File.WriteAllText(BuildFilePath(callerName, callerFilePath), json);
+            File.WriteAllText(BuildFilePath(name, filePath), json);
         }
 
-        public static string ReadAllText(string callerName, string callerFilePath)
+        public static string ReadAllText(string name, string filePath)
         {
-            return File.ReadAllText(BuildFilePath(callerName, callerFilePath));
+            return File.ReadAllText(BuildFilePath(name, filePath));
         }
 
-        public static bool Exists(string callerName, string callerFilePath)
+        public static bool Exists(string name, string filePath)
         {
-            return File.Exists(BuildFilePath(callerName, callerFilePath));
+            return File.Exists(BuildFilePath(name, filePath));
         }
 
-        // TODO: Cover this in tests
         // TODO: Add some caching to this
-        public static string BuildFilePath(string callerName, string callerFilePath)
+        public static string BuildFilePath(string name, string filePath)
         {
-            return DirectoryService.BuildDirectoryPath(callerFilePath)
-                   + Path.DirectorySeparatorChar + callerName
+            return DirectoryService.BuildDirectoryPath(filePath)
+                   + Path.DirectorySeparatorChar + name
                    + ".json";
         }
     }

@@ -15,8 +15,5 @@ Next use `SnapshotAssert` to generate Snapshot files. See [these tests](Snapshot
 * Testing the output of mapping logic, replace multiple assertions with a single snapshot.
 * Asserting that there are no changes in the response of an API.
 
-## Known Issues
-* Calling `.Snapshot(..)` from a non-Fact/Theory method will use that method name for the naming of the snapshot JSON file. This can cause issues when using that non-Fact/Theory method for multiple tests.
-
 ## Contributing
 See [Contributing.md](Contributing.md).

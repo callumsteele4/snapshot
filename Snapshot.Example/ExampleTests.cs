@@ -43,5 +43,20 @@ namespace Snapshot.Example
 
             Assert.Snapshot(_example);
         }
+
+        // This is an example test, the snapshot JSON can be seen in /__snapshots/ExampleTests/Check_message_in_another_method.json
+        // The name of the method with the [Fact] attribute will be used for the snapshot JSON filename, rather than the calling method.
+        // JSON is as seen below:
+        // {"Message":"Initial message."}
+        [Fact]
+        public void Check_message_in_another_method()
+        {
+            CheckSnapshot(_example);
+        }
+
+        private void CheckSnapshot(Example example)
+        {
+            Assert.Snapshot(example);
+        }
     }
 }

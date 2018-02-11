@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
 using Xunit.Sdk;
 
 namespace Snapshot
@@ -7,20 +6,17 @@ namespace Snapshot
     // Possibility: https://andrewlock.net/creating-a-custom-xunit-theory-test-dataattribute-to-load-data-from-json-files/
     public class Assert : Xunit.Assert
     {
-        // TODO: Callername will only work for when directly called by the test method,
-        // need to look at how to get name of the method in the stack trace which has the [Fact] attribute.
-        // Work out how to access caller name and caller file path using reflection.
+        // TODO: Move filepath knowledge out of Snapshot and into FileService
         public static void Snapshot<T>(
             T input,
-            bool overwriteExistingSnapshot = false,
-            [CallerMemberName] string callerName = "",
-            [CallerFilePath] string callerFilePath = "")
+            bool overwriteExistingSnapshot = false)
         {
+            var (testName, testFilePath) = FileService.GetTestMethodNameAndFilePath();
             var json = JsonConvert.SerializeObject(input);
 
-            if (FileService.Exists(callerName, callerFilePath))
+            if (FileService.Exists(testName, testFilePath))
             {
-                var snapshotJson = FileService.ReadAllText(callerName, callerFilePath);
+                var snapshotJson = FileService.ReadAllText(testName, testFilePath);
 
                 try
                 {
@@ -30,11 +26,11 @@ namespace Snapshot
                 {
                     if (overwriteExistingSnapshot)
                     {
-                        FileService.WriteAllText(callerName, callerFilePath, json);
+                        FileService.WriteAllText(testName, testFilePath, json);
                     }
                     else
                     {
-                        var filePath = FileService.BuildFilePath(callerName, callerFilePath);
+                        var filePath = FileService.BuildFilePath(testName, testFilePath);
                         throw new SnapshotException(exception,
                             $"For this test to pass, the json in '{filePath}' needs to be updated.\n" +
                             "\n" +
@@ -46,8 +42,8 @@ namespace Snapshot
             }
             else
             {
-                var filePath = FileService.BuildFilePath(callerName, callerFilePath);
-                FileService.WriteAllText(callerName, callerFilePath, json);
+                var filePath = FileService.BuildFilePath(testName, testFilePath);
+                FileService.WriteAllText(testName, testFilePath, json);
                 throw new SnapshotException(
                     $"A new json file has been written for this snapshot in '{filePath}'.\n" +
                     $"\n" +
