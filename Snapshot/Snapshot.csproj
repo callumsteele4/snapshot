@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <PackageId>Snapshot</PackageId>
-    <PackageVersion>0.2.0-alpha</PackageVersion>
+    <PackageVersion>0.3.0-alpha</PackageVersion>
     <Authors>Callum Steele</Authors>
     <Description>Utility for snapshot testing.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
