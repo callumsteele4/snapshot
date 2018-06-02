@@ -8,16 +8,22 @@ namespace Snapshot
     // TODO: Work out how to make this part of the Assert partial class and testable as such
     public class SnapshotAssert
     {
-        private readonly IFileService _fileService;
+        private readonly IFileExistenceChecker _fileExistenceChecker;
+        private readonly IFileReader _fileReader;
+        private readonly IFileWriter _fileWriter;
 
         public SnapshotAssert()
         {
-            _fileService = new SnapshotFileService(new SnapshotDirectoryService());
+            _fileExistenceChecker = new SnapshotFileExistenceChecker();
+            _fileReader = new SnapshotFileReader();
+            _fileWriter = new SnapshotFileWriter(new SnapshotDirectoryService());
         }
 
-        internal SnapshotAssert(IFileService fileService)
+        internal SnapshotAssert(IFileExistenceChecker fileExistenceChecker, IFileReader fileReader, IFileWriter fileWriter)
         {
-            _fileService = fileService;
+            _fileExistenceChecker = fileExistenceChecker;
+            _fileReader = fileReader;
+            _fileWriter = fileWriter;
         }
 
         // TODO: Callername will only work for when directly called by the test method,
@@ -29,12 +35,12 @@ namespace Snapshot
             [CallerMemberName] string callerName = "",
             [CallerFilePath] string callerFilePath = "")
         {
-            var caller = new CallerMethodInfo {Name = callerName, FilePath = callerFilePath};
+            var callerMethodInfo = new CallerMethodInfo(callerName, callerFilePath);
             var json = JsonConvert.SerializeObject(input);
 
-            if (_fileService.Exists(caller))
+            if (_fileExistenceChecker.Exists(callerMethodInfo))
             {
-                var snapshotJson = _fileService.ReadAllText(caller);
+                var snapshotJson = _fileReader.ReadAllText(callerMethodInfo);
 
                 try
                 {
@@ -44,23 +50,22 @@ namespace Snapshot
                 {
                     if (overwriteExistingSnapshot)
                     {
-                        _fileService.WriteAllText(caller, json);
+                        _fileWriter.WriteAllText(callerMethodInfo, json);
                     }
                     else
                     {
-                        var filePath = _fileService.BuildFilePath(caller);
                         throw new SnapshotException(exception,
-                            $"For this test to pass, the json in '{filePath}' needs to be updated.\n" +
+                            $"For this test to pass, the json in '{callerMethodInfo.SnapshotFilePath}' needs to be updated.\n" +
                             "\n" +
-                            $"'{filePath}' can be updated in two ways: \n" +
+                            $"'{callerMethodInfo.SnapshotFilePath}' can be updated in two ways: \n" +
                             "    By running \'.Snapshot(T input, true)\', where true indicates that the existing snapshot should be overwritten.\n" +
-                            $"    By manually editing '{filePath}'.\n");
+                            $"    By manually editing '{callerMethodInfo.SnapshotFilePath}'.\n");
                     }
                 }
             }
             else
             {
-                _fileService.WriteAllText(caller, json);
+                _fileWriter.WriteAllText(callerMethodInfo, json);
                 // TODO: Alert test runner with a warning that a new snapshot json file has been created
             }
         }
