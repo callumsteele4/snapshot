@@ -12,33 +12,33 @@ namespace Snapshot
         }
         
         // TODO: Test that directory is created when needed here.
-        public void WriteAllText(string callerName, string callerFilePath, string json)
+        public void WriteAllText(CallerMethodInfo callerMethodInfo, string json)
         {
-            var directoryPath = _directoryService.BuildDirectoryPath(callerFilePath);
+            var directoryPath = _directoryService.BuildDirectoryPath(callerMethodInfo.FilePath);
             if (!_directoryService.Exists(directoryPath))
             {
                 _directoryService.CreateDirectory(directoryPath);
             }
             
-            File.WriteAllText(BuildFilePath(callerName, callerFilePath), json);
+            File.WriteAllText(BuildFilePath(callerMethodInfo), json);
         }
 
-        public string ReadAllText(string callerName, string callerFilePath)
+        public string ReadAllText(CallerMethodInfo callerMethodInfo)
         {
-            return File.ReadAllText(BuildFilePath(callerName, callerFilePath));
+            return File.ReadAllText(BuildFilePath(callerMethodInfo));
         }
 
-        public bool Exists(string callerName, string callerFilePath)
+        public bool Exists(CallerMethodInfo callerMethodInfo)
         {
-            return File.Exists(BuildFilePath(callerName, callerFilePath));
+            return File.Exists(BuildFilePath(callerMethodInfo));
         }
 
         // TODO: Cover this in tests
         // TODO: Add some caching to this
-        public string BuildFilePath(string callerName, string callerFilePath)
+        public string BuildFilePath(CallerMethodInfo callerMethodInfo)
         {
-            return _directoryService.BuildDirectoryPath(callerFilePath)
-                   + Path.DirectorySeparatorChar + callerName
+            return _directoryService.BuildDirectoryPath(callerMethodInfo.FilePath)
+                   + Path.DirectorySeparatorChar + callerMethodInfo.Name
                    + ".json";
         }
     }

@@ -2,14 +2,13 @@ using System.Diagnostics.CodeAnalysis;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Snapshot.Tests
 {
     [SuppressMessage("ReSharper", "ExplicitCallerInfoArgument")]
     public class AssertTests
     {
-        private const string Callername = "callerName";
+        private const string CallerName = "callerName";
         private const string CallerFilePath = "callerPath";
         private const string FilePath = "/directory/file/path.json";
         private const string ExistingDifferentSnapshotJson = "{\"String\":\"Random String\"}";
@@ -21,7 +20,8 @@ namespace Snapshot.Tests
             _mockFileService = new Mock<IFileService>();
             _sut = new SnapshotAssert(_mockFileService.Object);
             _mockFileService
-                .Setup(x => x.BuildFilePath(Callername, CallerFilePath))
+                .Setup(x => x.BuildFilePath(It.Is<CallerMethodInfo>(caller =>
+                    caller.Name == CallerName && caller.FilePath == CallerFilePath)))
                 .Returns(FilePath);
         }
 
@@ -31,15 +31,15 @@ namespace Snapshot.Tests
             var snapshotee = new TestClass();
 
             _mockFileService
-                .Setup(x => x.Exists(Callername, CallerFilePath))
+                .Setup(x => x.Exists(It.Is<CallerMethodInfo>(caller =>
+                    caller.Name == CallerName && caller.FilePath == CallerFilePath)))
                 .Returns(false);
 
-            _sut.Snapshot(snapshotee, false, Callername, CallerFilePath);
+            _sut.Snapshot(snapshotee, false, CallerName, CallerFilePath);
 
             _mockFileService
                 .Verify(x => x.WriteAllText(
-                        Callername,
-                        CallerFilePath,
+                        It.Is<CallerMethodInfo>(caller => caller.Name == CallerName && caller.FilePath == CallerFilePath),
                         JsonConvert.SerializeObject(snapshotee)),
                     Times.Once);
         }
@@ -51,13 +51,15 @@ namespace Snapshot.Tests
             var snapshoteeJson = JsonConvert.SerializeObject(snapshotee);
 
             _mockFileService
-                .Setup(x => x.Exists(Callername, CallerFilePath))
+                .Setup(x => x.Exists(It.Is<CallerMethodInfo>(caller =>
+                    caller.Name == CallerName && caller.FilePath == CallerFilePath)))
                 .Returns(true);
             _mockFileService
-                .Setup(x => x.ReadAllText(Callername, CallerFilePath))
+                .Setup(x => x.ReadAllText(It.Is<CallerMethodInfo>(caller =>
+                    caller.Name == CallerName && caller.FilePath == CallerFilePath)))
                 .Returns(snapshoteeJson);
-            
-            _sut.Snapshot(snapshotee, false, Callername, CallerFilePath);
+
+            _sut.Snapshot(snapshotee, false, CallerName, CallerFilePath);
         }
 
         [Fact]
@@ -66,13 +68,15 @@ namespace Snapshot.Tests
             var snapshotee = new TestClass();
 
             _mockFileService
-                .Setup(x => x.Exists(Callername, CallerFilePath))
+                .Setup(x => x.Exists(It.Is<CallerMethodInfo>(caller =>
+                    caller.Name == CallerName && caller.FilePath == CallerFilePath)))
                 .Returns(true);
             _mockFileService
-                .Setup(x => x.ReadAllText(Callername, CallerFilePath))
+                .Setup(x => x.ReadAllText(It.Is<CallerMethodInfo>(caller =>
+                    caller.Name == CallerName && caller.FilePath == CallerFilePath)))
                 .Returns(ExistingDifferentSnapshotJson);
 
-            Assert.Throws<SnapshotException>(() => _sut.Snapshot(snapshotee, false, Callername, CallerFilePath));
+            Assert.Throws<SnapshotException>(() => _sut.Snapshot(snapshotee, false, CallerName, CallerFilePath));
         }
 
         [Fact]
@@ -82,18 +86,19 @@ namespace Snapshot.Tests
             var snapshotee = new TestClass();
 
             _mockFileService
-                .Setup(x => x.Exists(Callername, CallerFilePath))
+                .Setup(x => x.Exists(It.Is<CallerMethodInfo>(caller =>
+                    caller.Name == CallerName && caller.FilePath == CallerFilePath)))
                 .Returns(true);
             _mockFileService
-                .Setup(x => x.ReadAllText(Callername, CallerFilePath))
+                .Setup(x => x.ReadAllText(It.Is<CallerMethodInfo>(caller =>
+                    caller.Name == CallerName && caller.FilePath == CallerFilePath)))
                 .Returns(ExistingDifferentSnapshotJson);
 
-            _sut.Snapshot(snapshotee, true, Callername, CallerFilePath);
+            _sut.Snapshot(snapshotee, true, CallerName, CallerFilePath);
 
             _mockFileService
                 .Verify(x => x.WriteAllText(
-                        Callername,
-                        CallerFilePath,
+                        It.Is<CallerMethodInfo>(caller => caller.Name == CallerName && caller.FilePath == CallerFilePath),
                         JsonConvert.SerializeObject(snapshotee)),
                     Times.Once);
         }

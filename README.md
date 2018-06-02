@@ -6,7 +6,7 @@ It is an implementation of the Jest Snapshot Testing concept that is found in [R
 
 ## Setup
 
-First install the NuGet package `Snapshot`. Currently only a pre-release version exists: `0.2.0-alpha`.
+First install the NuGet package `Snapshot`. Currently only a pre-release version exists: `0.4.0-alpha`.
 
 Next use `SnapshotAssert` to generate Snapshot files. See [these tests](Snapshot.Example/ExampleTests.cs) for an example of the expected behaviour.
 

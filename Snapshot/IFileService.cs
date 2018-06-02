@@ -2,9 +2,9 @@
 {
     public interface IFileService
     {
-        void WriteAllText(string callerName, string callerFilePath, string content);
-        string ReadAllText(string callerName, string callerFilePath);
-        bool Exists(string callerName, string callerFilePath);
-        string BuildFilePath(string callerName, string callerFilePath);
+        void WriteAllText(CallerMethodInfo callerMethodInfo, string content);
+        string ReadAllText(CallerMethodInfo callerMethodInfo);
+        bool Exists(CallerMethodInfo callerMethodInfo);
+        string BuildFilePath(CallerMethodInfo callerMethodInfo);
     }
 }

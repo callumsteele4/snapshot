@@ -29,11 +29,12 @@ namespace Snapshot
             [CallerMemberName] string callerName = "",
             [CallerFilePath] string callerFilePath = "")
         {
+            var caller = new CallerMethodInfo {Name = callerName, FilePath = callerFilePath};
             var json = JsonConvert.SerializeObject(input);
 
-            if (_fileService.Exists(callerName, callerFilePath))
+            if (_fileService.Exists(caller))
             {
-                var snapshotJson = _fileService.ReadAllText(callerName, callerFilePath);
+                var snapshotJson = _fileService.ReadAllText(caller);
 
                 try
                 {
@@ -43,11 +44,11 @@ namespace Snapshot
                 {
                     if (overwriteExistingSnapshot)
                     {
-                        _fileService.WriteAllText(callerName, callerFilePath, json);
+                        _fileService.WriteAllText(caller, json);
                     }
                     else
                     {
-                        var filePath = _fileService.BuildFilePath(callerName, callerFilePath);
+                        var filePath = _fileService.BuildFilePath(caller);
                         throw new SnapshotException(exception,
                             $"For this test to pass, the json in '{filePath}' needs to be updated.\n" +
                             "\n" +
@@ -59,7 +60,7 @@ namespace Snapshot
             }
             else
             {
-                _fileService.WriteAllText(callerName, callerFilePath, json);
+                _fileService.WriteAllText(caller, json);
                 // TODO: Alert test runner with a warning that a new snapshot json file has been created
             }
         }
