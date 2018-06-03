@@ -6,7 +6,7 @@ namespace Snapshot
     {
         public bool Exists(CallerMethodInfo callerMethodInfo)
         {
-            return File.Exists(callerMethodInfo.FilePath);
+            return File.Exists(callerMethodInfo.SnapshotFilePath);
         }
     }
 }

@@ -11,19 +11,23 @@ namespace Snapshot
         private readonly IFileExistenceChecker _fileExistenceChecker;
         private readonly IFileReader _fileReader;
         private readonly IFileWriter _fileWriter;
+        private readonly IDirectoryCreator _directoryCreator;
 
         public SnapshotAssert()
         {
             _fileExistenceChecker = new SnapshotFileExistenceChecker();
             _fileReader = new SnapshotFileReader();
-            _fileWriter = new SnapshotFileWriter(new SnapshotDirectoryService());
+            _fileWriter = new SnapshotFileWriter();
+            _directoryCreator = new DirectoryCreator();
         }
 
-        internal SnapshotAssert(IFileExistenceChecker fileExistenceChecker, IFileReader fileReader, IFileWriter fileWriter)
+        internal SnapshotAssert(IFileExistenceChecker fileExistenceChecker, IFileReader fileReader,
+            IFileWriter fileWriter, IDirectoryCreator directoryCreator)
         {
             _fileExistenceChecker = fileExistenceChecker;
             _fileReader = fileReader;
             _fileWriter = fileWriter;
+            _directoryCreator = directoryCreator;
         }
 
         // TODO: Callername will only work for when directly called by the test method,
@@ -65,6 +69,8 @@ namespace Snapshot
             }
             else
             {
+                _directoryCreator.CreateDirectory(callerMethodInfo.SnapshotDirectoryPath);
+
                 _fileWriter.WriteAllText(callerMethodInfo, json);
                 // TODO: Alert test runner with a warning that a new snapshot json file has been created
             }

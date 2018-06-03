@@ -1,8 +1,7 @@
 ﻿namespace Snapshot
 {
-    public interface IDirectoryService
+    public interface IDirectoryCreator
     {
-        bool Exists(string directoryPath);
         void CreateDirectory(string directoryPath);
     }
 }

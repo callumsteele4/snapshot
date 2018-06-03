@@ -2,13 +2,8 @@
 
 namespace Snapshot
 {
-    public class SnapshotDirectoryService : IDirectoryService
+    public class DirectoryCreator : IDirectoryCreator
     {
-        public bool Exists(string directoryPath)
-        {
-            return Directory.Exists(directoryPath);
-        }
-
         public void CreateDirectory(string directoryPath)
         {
             Directory.CreateDirectory(directoryPath);
